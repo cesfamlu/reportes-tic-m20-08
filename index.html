@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes Técnicos - CESFAM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet"> 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <script>
+        // Tailwind CSS Configuration
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'bebas': ['Bebas Neue', 'sans-serif'],
+                        'inter': ['Inter', 'sans-serif']
+                    },
+                    colors: {
+                        'custom-bg-primary': '#1c1c1e',
+                        'custom-bg-content': '#2c2c2e',
+                        'custom-bg-content-alt': '#3a3a3c',
+                        'custom-text-primary': '#f5f5f7',
+                        'custom-text-secondary': '#a0a0a5',
+                        'custom-text-on-accent': '#ffffff',
+                        'custom-accent-primary': '#6a5acd',
+                        'custom-accent-hover': '#7b68ee',
+                        'custom-accent-active': '#5d4bbf',
+                        'custom-border-separator': '#38383a',
+                    },
+                    borderRadius: {
+                        'main': '1rem',
+                        'elements': '0.75rem',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-inter text-custom-text-primary">
+
+    <div id="password-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-4">
+        <div class="w-full max-w-md p-8 bg-custom-bg-content rounded-main shadow-2xl text-center">
+            <h1 class="font-inter font-extrabold text-5xl sm:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 mb-4">Bienvenido</h1>
+            <p class="text-custom-text-secondary mb-8 text-lg">Sistema de Reportes Técnicos CESFAM</p>
+            <form id="password-form">
+                <input type="password" id="password-input" placeholder="Contraseña" class="w-full bg-custom-bg-content-alt text-custom-text-primary placeholder-custom-text-secondary px-4 py-3 mb-3 border border-custom-border-separator rounded-elements focus:ring-2 focus:ring-custom-accent-primary focus:border-transparent outline-none transition-all duration-200 text-center">
+                <p id="password-error" class="text-red-500 text-sm mb-4 h-5"></p>
+                <button type="submit" class="w-full bg-custom-accent-primary hover:bg-custom-accent-hover text-custom-text-on-accent font-semibold py-3 px-6 rounded-elements transition-all duration-200 text-lg">Acceder</button>
+            </form>
+        </div>
+         <p class="text-custom-text-secondary text-xs mt-8">&copy; <span id="loginCurrentYear"></span> CESFAM La Unión</p>
+    </div>
+
+    <div id="app-content" class="app-content-wrapper hidden">
+        <div class="main-content p-4 md:p-8">
+            <div class="container mx-auto max-w-screen-2xl px-4">
+                <header class="text-center mb-8">
+                    <h1 class="page-title text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-custom-accent-primary to-custom-accent-hover mb-2">Reportes Técnicos Recientes</h1>
+                    <p class="text-lg text-custom-text-secondary">Lista de requerimientos TIC.</p>
+                </header>
+
+                <div class="filters flex flex-col sm:flex-row justify-center items-center gap-4 mb-8 p-4 bg-custom-bg-content rounded-main shadow-lg">
+                    <input type="text" id="buscador" placeholder="Buscar por nombre, área o estado..."
+                           class="w-full sm:w-auto flex-grow bg-custom-bg-content-alt text-custom-text-primary placeholder-custom-text-secondary px-4 py-2.5 border border-custom-border-separator rounded-elements focus:ring-2 focus:ring-custom-accent-primary focus:border-transparent outline-none transition-all duration-200">
+                    <select id="filtroEstado"
+                            class="w-full sm:w-auto bg-custom-bg-content-alt text-custom-text-primary px-4 py-2.5 border border-custom-border-separator rounded-elements focus:ring-2 focus:ring-custom-accent-primary focus:border-transparent outline-none appearance-none transition-all duration-200"
+                            style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20fill%3D%22%23a0a0a5%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.25em;">
+                        <option value="" class="bg-custom-bg-content-alt text-custom-text-primary">Todos los estados</option>
+                        <option value="Pendiente" class="bg-custom-bg-content-alt text-custom-text-primary">Pendiente</option>
+                        <option value="En progreso" class="bg-custom-bg-content-alt text-custom-text-primary">En progreso</option>
+                        <option value="Resuelto" class="bg-custom-bg-content-alt text-custom-text-primary">Resuelto</option>
+                    </select>
+                </div>
+
+                <div class="bg-custom-bg-content shadow-2xl rounded-main overflow-x-auto">
+                    <table class="w-full min-w-full text-sm text-left text-custom-text-primary">
+                        <thead id="tabla-reportes-head" class="text-xs text-custom-accent-hover uppercase bg-custom-bg-content-alt hidden md:table-header-group sticky top-0 z-10">
+                            <tr>
+                                <th scope="col" class="px-4 py-3">ID Reporte</th>
+                                <th scope="col" class="px-6 py-3">Nombre</th>
+                                <th scope="col" class="px-6 py-3">Contacto</th>
+                                <th scope="col" class="px-6 py-3">Área</th>
+                                <th scope="col" class="px-6 py-3">Fecha</th>
+                                <th scope="col" class="px-6 py-3">Problema</th>
+                                <th scope="col" class="px-6 py-3">Solución</th>
+                                <th scope="col" class="px-6 py-3">Estado</th>
+                                <th scope="col" class="px-6 py-3 text-center">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-reportes" class="bg-custom-bg-content">
+                        
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-center mt-8">
+                    <button id="btn-cargar-mas" class="bg-transparent hover:bg-custom-accent-primary text-custom-accent-primary font-semibold hover:text-custom-text-on-accent py-2 px-6 border border-custom-accent-primary hover:border-transparent rounded-elements transition-all duration-200"
+                            style="box-shadow: 0 0 0px var(--shadow-button);">
+                        Cargar más
+                    </button>
+                </div>
+            </div>
+        </div>
+
+       <footer>
+        <p>&copy; 2025 CESFAM Dr. Alfredo Gantz Mann</p>
+        <p>
+            <a href="http://cesfamlu.github.io/links">Política de Privacidad</a> |
+            <a href="http://cesfamlu.github.io/links">Términos y Condiciones</a>
+        </p>
+    </footer>
+    </div>
+
+    <div id="confirmationModal" class="modal-backdrop">
+        <div class="modal-content">
+            <h3 id="modalTitle" class="text-xl font-semibold text-custom-text-primary mb-4">Confirmar Acción</h3>
+            <p id="modalMessage" class="text-custom-text-secondary mb-6">¿Estás seguro?</p>
+            <div class="flex justify-end gap-3">
+                <button id="modalCancelButton" class="px-4 py-2 bg-custom-bg-content-alt hover:bg-opacity-75 text-custom-text-primary rounded-elements transition-colors">Cancelar</button>
+                <button id="modalConfirmButton" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-custom-text-on-accent rounded-elements transition-colors">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="viewTextModal" class="modal-backdrop">
+        <div class="modal-content">
+            <h3 id="viewTextModalTitle" class="text-xl font-semibold text-custom-text-primary mb-4">Detalle Completo</h3>
+            <div id="viewTextModalContent" class="modal-text-content text-custom-text-primary mb-6"></div>
+            <div class="flex justify-end">
+                <button id="viewTextModalCloseButton" class="px-4 py-2 bg-custom-accent-primary hover:bg-custom-accent-hover text-custom-text-on-accent rounded-elements transition-colors">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toastPlaceholder"></div>
+
+    <script type="module" src="js/script.js"></script>
+</body>
+</html>
