@@ -1,10 +1,8 @@
-// script.js
 
-// Import Firebase modules from the CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
-// Your web app's Firebase configuration
+
 const firebaseConfig = {
     apiKey: "AIzaSyBPxvqvNfHKE1YJe4h6UwHznY4jsZMiJ0A", 
     authDomain: "reportes-cesfam.firebaseapp.com",
@@ -15,7 +13,7 @@ const firebaseConfig = {
     appId: "1:101243881563:web:793a5a48ffce80f2a4977e"
 };
 
-// --- Password Protection Elements ---
+
 const passwordScreen = document.getElementById('password-screen');
 const passwordForm = document.getElementById('password-form');
 const passwordInput = document.getElementById('password-input');
@@ -28,7 +26,6 @@ if(loginCurrentYearSpan) {
 }
 
 
-// --- App Elements (initialized after password) ---
 let database;
 let todosLosReportes = []; 
 let reportesFiltradosMostrados = []; 
@@ -37,21 +34,21 @@ let paginaActual = 1;
 
 let tablaReportes, tablaReportesHead, buscadorInput, filtroEstadoSelect, btnCargarMas, appCurrentYearSpan;
 
-// View Text Modal Elements
+
 let viewTextModal, viewTextModalTitle, viewTextModalContent, viewTextModalCloseButton;
 
-// Confirmation Modal Elements
+
 let confirmationModal, modalTitle, modalMessage, modalConfirmButton, modalCancelButton;
 let confirmCallback = null;
 
 
-// --- Initialize App Function (called after password success) ---
+
 function initializeAppAndListeners() {
-    // Initialize Firebase
+   
     const app = initializeApp(firebaseConfig);
     database = getDatabase(app); // Assign to global 'database'
 
-    // Get App DOM Elements
+    
     tablaReportes = document.getElementById('tabla-reportes');
     tablaReportesHead = document.getElementById('tabla-reportes-head'); 
     buscadorInput = document.getElementById('buscador');
@@ -75,7 +72,7 @@ function initializeAppAndListeners() {
         appCurrentYearSpan.textContent = new Date().getFullYear();
     }
 
-    // Attach event listeners for modals
+
     modalConfirmButton.addEventListener('click', () => {
         if (confirmCallback) {
             confirmCallback();
@@ -105,7 +102,7 @@ function initializeAppAndListeners() {
     });
 
 
-    // Fetch initial data
+  
     const reportesRef = ref(database, 'reportes/');
     onValue(reportesRef, (snapshot) => {
         const data = snapshot.val();
@@ -128,7 +125,7 @@ function initializeAppAndListeners() {
         showToast("Error al cargar los datos iniciales.", "error");
     });
 
-    // Attach other app event listeners
+    
     buscadorInput.addEventListener('input', () => {
         paginaActual = 1; 
         renderizarReportes();
@@ -151,7 +148,7 @@ passwordForm.addEventListener('submit', function(event) {
     if (enteredPassword === "tic2026") {
         passwordScreen.classList.add('hidden');
         appContent.classList.remove('hidden');
-        initializeAppAndListeners(); // Initialize the app after correct password
+        initializeAppAndListeners(); 
     } else {
         passwordError.textContent = "Contraseña incorrecta. Inténtalo de nuevo.";
         passwordInput.classList.add('border-red-500', 'focus:ring-red-500');
@@ -164,7 +161,6 @@ passwordForm.addEventListener('submit', function(event) {
 });
 
 
-// --- Robust String Normalization Function ---
 const normalizeStateString = (str) => {
     if (str === null || typeof str === 'undefined' || String(str).trim() === "") { 
         return null; 
@@ -173,7 +169,7 @@ const normalizeStateString = (str) => {
 };
 
 
-// --- Toast Notification Function ---
+
 function showToast(message, type = 'success', duration = 3000) {
     const toastPlaceholder = document.getElementById('toastPlaceholder');
     const toast = document.createElement('div');
@@ -193,7 +189,6 @@ function showToast(message, type = 'success', duration = 3000) {
     }, duration);
 }
 
-// --- Confirmation Modal Functions ---
 function showConfirmationModal(title, message, onConfirm) {
     modalTitle.textContent = title;
     modalMessage.textContent = message;
@@ -201,7 +196,7 @@ function showConfirmationModal(title, message, onConfirm) {
     confirmationModal.classList.add('active');
 }
 
-// --- View Text Modal Functions ---
+
 function showViewTextModal(title, text) {
     viewTextModalTitle.textContent = title;
     viewTextModalContent.textContent = text; 
