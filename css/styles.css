@@ -4,7 +4,7 @@
     height: 8px;
 }
 ::-webkit-scrollbar-track {
-    background: #1c1c1e; /* Corresponds to --bg-primary */
+    background: #1c1c1e; 
 }
 ::-webkit-scrollbar-thumb {
     background: #6a5acd; /* Corresponds to --accent-primary */
@@ -37,7 +37,7 @@ h1.page-title {
     font-family: ' arial', sans-serif; 
 }
 
-/* Custom modal styles */
+
 .modal-backdrop {
     position: fixed;
     top: 0;
@@ -58,9 +58,9 @@ h1.page-title {
     visibility: visible;
 }
 .modal-content {
-    background-color: #2c2c2e; /* --bg-content, defined in Tailwind config */
+    background-color: #2c2c2e; 
     padding: 2rem;
-    border-radius: 0.75rem; /* --border-radius-elements, defined in Tailwind config */
+    border-radius: 0.75rem; 
     box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* --shadow-container */
     width: 90%;
     max-width: 500px; 
@@ -80,9 +80,9 @@ h1.page-title {
     border-radius: 0.5rem; 
 }
 
-/* Password Screen Styles */
+
 #password-screen {
-    background: #1c1c1e; /* --bg-primary, defined in Tailwind config */
+    background: #1c1c1e; 
 }
 
 
@@ -114,14 +114,14 @@ h1.page-title {
             text-decoration: underline;
         }
 
-/* Custom toast styles */
+
 .toast-notification {
     position: fixed;
     bottom: 20px;
     right: 20px;
     padding: 1rem 1.5rem;
-    border-radius: 0.75rem; /* --border-radius-elements, defined in Tailwind config */
-    color: #ffffff; /* --text-on-accent, defined in Tailwind config */
+    border-radius: 0.75rem; 
+    color: #ffffff; 
     font-weight: 500;
     z-index: 1050;
     opacity: 0;
